@@ -1,0 +1,79 @@
+Implementation of Floyd-Warshall Algorithm by C#  
+
+using System;   
+namespace WarshallAlgo 
+{     
+class Program 
+{         
+static void Algo(int[,] w, int num) 
+{             
+double[,] dis = new double[num, num]; 
+for (int i = 0; i < num; i++) 
+{                 
+for (int j = 0; j < num; j++) 
+{                     
+dis[i, j] = double.PositiveInfinity;                 
+}             
+}               
+for (int i = 0; i < w.GetLength(0); i++) 
+{
+dis[w[i, 0] - 1, w[i, 1] - 1] = w[i, 2];
+}              
+int[,] next = new int[num, num];             
+for (int i = 0; i < num; i++) 
+{                 
+for (int j = 0; j < num; j++) 
+{                     
+if (i != j) 
+{                         
+next[i, j] = j + 1;
+}                 
+}            
+}              
+for (int k = 0; k < num; k++) 
+{                 
+for (int i = 0; i < num; i++) 
+{                     
+for (int j = 0; j < num; j++) 
+{                         
+if (dis[i, k] + dis[k, j] < dis[i, j])
+{                             
+dis[i, j] = dis[i, k] + dis[k, j];
+next[i, j] = next[i, k];                        
+}                     
+}                 
+}             
+}               
+Output(dis, next);        
+}   
+ 
+
+static void Output(double[,] dis, int[,] next) {
+Console.WriteLine("pair     dis    result");            
+for (int i = 0; i < next.GetLength(0); i++) 
+{                
+for (int j = 0; j < next.GetLength(1); j++)
+{                    
+if (i != j) 
+{ 
+int u = i + 1;     
+int v = j + 1;          
+string result = string.Format("{0} goes to {1}    {2,2:G}     {3}", u, v, dis[i, j], u);   
+do 
+{                           
+u = next[u - 1, v - 1];                     
+result += " -> " + u;                       
+} while (u != v);                         
+Console.WriteLine(result);                     
+}                
+} 
+}        
+}          
+static void Main(string[] args)
+{             
+int[,] w = { { 2, 1, -3 }, { 4, 2, 3 }, { 1, 2, 3 }, { 3, 4, 2 }, { 5, 2, -2 } };
+int num = 7;              
+Algo(w, num);        
+}    
+} 
+} 
